@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { getUserService, createUserService } from "../services/userServices";
+import createUserValidation from "../validations/createUserValidation"
 
 function getUser(request: FastifyRequest, reply: FastifyReply) {
 
@@ -15,16 +16,21 @@ function getUser(request: FastifyRequest, reply: FastifyReply) {
 
 }
 
-function createUser(request: FastifyRequest, reply: FastifyReply) {
+async function createUser(request: FastifyRequest, reply: FastifyReply) {
 
     const data = request.body;
 
-    const user = createUserService(data);
+    await createUserValidation(data).then(function (validData) {
 
-    user.then(function (result) {
-        reply.code(201).send({ data: result });
+        const user = createUserService(validData);
+
+        user.then(function (result) {
+            reply.code(201).send({ data: result });
+        }).catch(function (error) {
+            reply.code(500).send(error);
+        })
     }).catch(function (error) {
-        reply.code(500).send(error);
+        reply.code(error.status).send({ data: { error: error.messages } });
     })
 
 }
