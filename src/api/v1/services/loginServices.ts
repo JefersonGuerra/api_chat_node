@@ -6,8 +6,8 @@ const prisma = new PrismaClient()
 
 async function loginService(data: any) {
 
-    const email = data.email;
-    const password = data.password;
+    const email = `${data.email}`;
+    const password = `${data.password}`;
 
     const user = await prisma.user.findFirst({
         where: { email: email },

@@ -19,3 +19,15 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - ${PGADMIN_DEFAULT_PORT}
+  api:
+    env_file: ".env"
+    build: .
+    command: "yarn start"
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    expose:
+      - ${PORT_NODE}
+    ports:
+      - ${PORT_NODE}:${PORT_NODE}

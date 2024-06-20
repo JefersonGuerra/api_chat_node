@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch --env-file .env src/http/server.js",
+    "dev": "tsx watch --env-file .env src/http/server.ts",
+    "start": "tsx --env-file .env src/http/server.ts",
     "migrate:create": "prisma migrate dev --create-only",
     "migrate": "prisma migrate dev",
     "migrate:prod": "prisma migrate deploy"
