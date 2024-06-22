@@ -1,7 +1,10 @@
 import { PrismaClient } from '@prisma/client'
 import bcrypt from "bcrypt";
+import path from 'path'
+import multer from 'fastify-multer'
+import { v4 as uuidv4 } from 'uuid';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 async function getUserService(params: any) {
 
@@ -33,13 +36,29 @@ async function getUserService(params: any) {
     return user;
 }
 
-async function createUserService(data: any) {
+const upload = multer({
+
+    storage: multer.diskStorage({
+        destination: path.join(`${__dirname}/../storage/user`),
+        filename(req, file, callback) {
+            const fileName = `${uuidv4()}_${file.originalname}`
+
+            return callback(null, fileName)
+        },
+    }),
+
+})
+
+const uploadUser = upload.single('image')
+
+async function createUserService(data: any, file: any) {
 
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(data.password, salt);
 
     Object.keys(data).forEach(() => {
         data['password'] = hash;
+        data['image'] = file.filename;
     });
 
     const user = await prisma.user.create({
@@ -54,4 +73,4 @@ async function createUserService(data: any) {
     return user;
 }
 
-export { getUserService, createUserService }
+export { getUserService, createUserService, uploadUser }
