@@ -20,7 +20,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@fastify/multipart": "^8.3.0",
+    "@fastify/static": "^7.0.4",
     "@prisma/client": "^5.15.1",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",

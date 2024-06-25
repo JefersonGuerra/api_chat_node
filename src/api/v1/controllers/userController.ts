@@ -1,13 +1,16 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { getUserService, createUserService } from "../services/userServices";
 import createUserValidation from "../validations/userValidation"
+import { userTypes } from "../types/userTypes";
 import fs from "fs"
 
 function getUser(request: FastifyRequest, reply: FastifyReply) {
 
     const public_id = request.query;
 
-    const user = getUserService(public_id);
+    const fullUrl = `${request.protocol}://${request.hostname}${request.routeOptions.url}`
+
+    const user = getUserService(public_id, fullUrl);
 
     user.then(function (result) {
         reply.code(200).send({ data: result });
@@ -17,7 +20,7 @@ function getUser(request: FastifyRequest, reply: FastifyReply) {
 
 }
 
-async function createUser(request: any, reply: FastifyReply) {
+async function createUser(request: userTypes, reply: FastifyReply) {
 
     const data = request.body;
     const file = request.file;
@@ -32,7 +35,7 @@ async function createUser(request: any, reply: FastifyReply) {
         })
 
     }).catch(function (error) {
-        fs.unlinkSync(file.path);
+        fs.unlinkSync(file?.path ?? '');
         reply.code(error.status).send({ data: { error: error.messages } });
     })
 
