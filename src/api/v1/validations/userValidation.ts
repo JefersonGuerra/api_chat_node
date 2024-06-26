@@ -9,6 +9,7 @@ export default async function createUserValidation(data: any) {
       uniqueRule({ table: 'user', column: 'email' })
     ),
     password: vine.string().minLength(1),
+    re_password: vine.string().sameAs('password'),
     image: vine.string().minLength(1)
   })
 
@@ -18,13 +19,15 @@ export default async function createUserValidation(data: any) {
     'email': 'Preencha um email valido',
     'string': 'O campo {{ field }} não é valido',
     'email.unique': 'Este {{ field }} já existe',
+    're_password.sameAs': 'Senhas diferentes',
   }
 
   const fields = {
-    name: 'Nome',
-    email: 'E-mail',
-    password: 'Senha',
-    image: 'Imagem'
+    name: 'nome',
+    email: 'e-mail',
+    password: 'senha',
+    image: 'imagem',
+    re_password: 're_password',
   }
 
   vine.messagesProvider = new SimpleMessagesProvider(messages, fields)

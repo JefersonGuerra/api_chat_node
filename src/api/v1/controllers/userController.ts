@@ -22,21 +22,33 @@ function getUser(request: FastifyRequest, reply: FastifyReply) {
 
 async function createUser(request: userTypes, reply: FastifyReply) {
 
-    const data = request.body;
-    const file = request.file;
+    const data: any = request.body;
+    const file: any = request.file;
+
+    if (file.size > 0) {
+        data.image = file?.filename;
+    }
 
     await createUserValidation(data).then(function (validData) {
         const user = createUserService(validData, file);
 
         user.then(function (result) {
-            reply.code(201).send({ data: result });
+            reply.code(201).send({
+                success: "Usuário criado com sucesso!",
+                data: result
+            });
         }).catch(function (error) {
+            if (file?.path) {
+                fs.unlinkSync(file.path);
+            }
             reply.code(500).send(error);
         })
 
     }).catch(function (error) {
-        fs.unlinkSync(file?.path ?? '');
-        reply.code(error.status).send({ data: { error: error.messages } });
+        if (file?.path) {
+            fs.unlinkSync(file.path);
+        }
+        reply.code(error.status).send({ errorValidations: error.messages });
     })
 
 }

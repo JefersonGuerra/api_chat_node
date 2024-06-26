@@ -28,12 +28,7 @@ export default async function userRoutes(user: FastifyInstance) {
     user.route({
         method: 'POST',
         url: '/',
-        preHandler: [
-            function (request, reply, done) {
-                authJwt(request, reply, done);
-            },
-            uploadUser,
-        ],
+        preHandler: uploadUser,
         handler: function (request, reply) {
             createUser(request, reply);
         }

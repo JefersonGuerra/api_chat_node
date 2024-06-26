@@ -71,6 +71,8 @@ async function createUserService(data: any, file: userTypes["file"]) {
         data['image'] = file?.filename;
     });
 
+    delete data.re_password;
+
     const user = await prisma.user.create({
         data: data,
         select: {
