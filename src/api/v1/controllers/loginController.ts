@@ -12,7 +12,7 @@ async function CreateLogin(request: FastifyRequest, reply: FastifyReply) {
 
         login.then(function (result) {
 
-            if (!result) return reply.code(401).send({ data: { error: "Email ou senha incorretos" } }); 
+            if (!result) return reply.code(401).send({ loginFailed: "Email ou senha incorretos" });
             return reply.code(200).send({ data: result });
 
         }).catch(function (error) {
@@ -20,7 +20,7 @@ async function CreateLogin(request: FastifyRequest, reply: FastifyReply) {
         })
 
     }).catch(function (error) {
-        reply.code(error.status).send({ data: { error: error.messages } });
+        reply.code(error.status).send({ errorValidations: error });
     })
 
 

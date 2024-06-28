@@ -1,5 +1,6 @@
 //@ts-expect-error
 import vine, { errors, SimpleMessagesProvider } from '@vinejs/vine'
+import { JSONAPIErrorReporter } from './error/validation_error'
 
 export default async function createLoginValidation(data: any) {
   const schema = vine.object({
@@ -23,11 +24,11 @@ export default async function createLoginValidation(data: any) {
 
   try {
     const validator = vine.compile(schema)
-    const output = await validator.validate(data)
+    const output = await validator.validate(data, { errorReporter: () => new JSONAPIErrorReporter() })
     return output;
   } catch (error) {
     if (error instanceof errors.E_VALIDATION_ERROR) {
-      throw error;
+      throw Object.assign({}, ...error.messages, { status: error.status });
     }
   }
 

@@ -25,7 +25,7 @@ async function createUser(request: userTypes, reply: FastifyReply) {
     const data: any = request.body;
     const file: any = request.file;
 
-    if (file.size > 0) {
+    if (file?.size > 0) {
         data.image = file?.filename;
     }
 
@@ -48,7 +48,7 @@ async function createUser(request: userTypes, reply: FastifyReply) {
         if (file?.path) {
             fs.unlinkSync(file.path);
         }
-        reply.code(error.status).send({ errorValidations: error.messages });
+        reply.code(error.status).send({ errorValidations: error });
     })
 
 }
