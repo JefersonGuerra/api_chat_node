@@ -13,7 +13,7 @@ async function CreateLogin(request: FastifyRequest, reply: FastifyReply) {
         login.then(function (result) {
 
             if (!result) return reply.code(401).send({ loginFailed: "Email ou senha incorretos" });
-            return reply.code(200).send({ data: result });
+            return reply.code(200).send(result);
 
         }).catch(function (error) {
             reply.code(500).send(error);
