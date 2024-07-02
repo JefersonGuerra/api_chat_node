@@ -1,26 +1,9 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { getUserService, createUserService } from "../services/userServices";
+import { createUserService } from "../services/userServices";
 import createUserValidation from "../validations/userValidation"
-import { userTypes } from "../types/userTypes";
 import fs from "fs"
 
-function getUser(request: FastifyRequest, reply: FastifyReply) {
-
-    const public_id = request.query;
-
-    const fullUrl = `${request.protocol}://${request.hostname}${request.routeOptions.url}`
-
-    const user = getUserService(public_id, fullUrl);
-
-    user.then(function (result) {
-        reply.code(200).send({ data: result });
-    }).catch(function (error) {
-        reply.code(500).send(error);
-    })
-
-}
-
-async function createUser(request: userTypes, reply: FastifyReply) {
+async function createUser(request: FastifyRequest, reply: FastifyReply) {
 
     const data: any = request.body;
     const file: any = request.file;
@@ -53,4 +36,4 @@ async function createUser(request: userTypes, reply: FastifyReply) {
 
 }
 
-export { getUser, createUser }
+export { createUser }

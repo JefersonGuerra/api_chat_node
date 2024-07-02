@@ -12,6 +12,7 @@ async function loginService(data: any) {
     const user = await prisma.user.findFirst({
         where: { email: email },
         select: {
+            id: true,
             public_id: true,
             name: true,
             email: true,
@@ -28,7 +29,7 @@ async function loginService(data: any) {
 
     const token = jwt.sign({ data: { id: user?.public_id, email: user?.email } }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    const userResult = { id: user?.public_id, name: user?.name, email: user?.email, image: user?.image };
+    const userResult = { id: user?.id, public_id: user?.public_id, name: user?.name, email: user?.email, image: user?.image };
 
     return { token, userResult }
 

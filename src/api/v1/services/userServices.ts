@@ -7,45 +7,6 @@ import { userTypes } from "../types/userTypes";
 
 const prisma = new PrismaClient();
 
-async function getUserService(params: any, fullUrl: string) {
-
-    let user;
-    const public_id = params.id
-
-    if (public_id) {
-        user = await prisma.user.findFirst({
-            where: {
-                public_id: public_id,
-            },
-            select: {
-                name: true,
-                email: true,
-                image: true,
-            }
-        });
-
-        user = {
-            name: user?.name,
-            email: user?.email,
-            image: `${fullUrl}/${user?.image}`
-        }
-
-    } else {
-        user = await prisma.user.findMany({
-            select: {
-                name: true,
-                email: true,
-                image: true,
-            }
-        });
-
-        user.map((item) => item.image = `${fullUrl}/${item.image}`)
-
-    }
-
-    return user;
-}
-
 const upload = multer({
 
     storage: multer.diskStorage({
@@ -85,4 +46,4 @@ async function createUserService(data: any, file: userTypes["file"]) {
     return user;
 }
 
-export { getUserService, createUserService, uploadUser }
+export { createUserService, uploadUser }
