@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import { getUser, createContactRequest } from '../controllers/contactRequestController'
+import { getUser, createContactRequest, aceptInvite, refuseInvite } from '../controllers/contactRequestController'
 import authJwt from '../middleware/authJwt'
 import fastifystatic from '@fastify/static'
 import path from 'path'
@@ -24,8 +24,33 @@ export default async function contactRequestRoute(contactRequestRoute: FastifyIn
     contactRequestRoute.route({
         method: 'POST',
         url: '/',
+        preHandler: function (request, reply, done) {
+            authJwt(request, reply, done);
+        },
         handler: function (request, reply) {
             createContactRequest(request, reply);
+        }
+    });
+
+    contactRequestRoute.route({
+        method: 'PUT',
+        url: '/aceptInvite',
+        preHandler: function (request, reply, done) {
+            authJwt(request, reply, done);
+        },
+        handler: function (request, reply) {
+            aceptInvite(request, reply);
+        }
+    });
+
+    contactRequestRoute.route({
+        method: 'DELETE',
+        url: '/refuseInvite',
+        preHandler: function (request, reply, done) {
+            authJwt(request, reply, done);
+        },
+        handler: function (request, reply) {
+            refuseInvite(request, reply);
         }
     });
 

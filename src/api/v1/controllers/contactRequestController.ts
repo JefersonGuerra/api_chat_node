@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { getUserService, createContactRequestService } from '../services/contactRequestServices'
+import { getUserService, createContactRequestService, aceptInviteService, refuseInviteService } from '../services/contactRequestServices'
 
 function getUser(request: FastifyRequest, reply: FastifyReply) {
 
@@ -30,4 +30,30 @@ async function createContactRequest(request: FastifyRequest, reply: FastifyReply
     })
 }
 
-export { getUser, createContactRequest }
+async function aceptInvite(request: FastifyRequest, reply: FastifyReply) {
+
+    const data = request.body;
+
+    const add_contact = aceptInviteService(data);
+
+    add_contact.then(function (result) {
+        reply.code(200).send(result);
+    }).catch(function (error) {
+        reply.code(500).send(error);
+    })
+}
+
+async function refuseInvite(request: FastifyRequest, reply: FastifyReply) {
+
+    const data = request.query;
+
+    const add_contact = refuseInviteService(data);
+
+    add_contact.then(function (result) {
+        reply.code(200).send(result);
+    }).catch(function (error) {
+        reply.code(500).send(error);
+    })
+}
+
+export { getUser, createContactRequest, aceptInvite, refuseInvite }

@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 async function getUserService(params: any, fullUrl: string) {
 
-    const email = params.email
+    const email = (params.email).toLowerCase();
     const id_user_sender = parseInt(params.id_user_sender)
 
     if (!email) return null
@@ -12,7 +12,7 @@ async function getUserService(params: any, fullUrl: string) {
     const user = await prisma.user.findMany({
         where: {
             email: {
-                contains: email,
+                startsWith: email,
             },
         },
         select: {
@@ -46,4 +46,32 @@ async function createContactRequestService(data: any) {
     return add_contact;
 }
 
-export { getUserService, createContactRequestService }
+async function aceptInviteService(data: any) {
+
+    const add_contact = await prisma.add_contact.update({
+        data: {
+            status: true,
+        },
+        where: {
+            id: data.idListInvate
+        },
+    })
+
+    return add_contact;
+}
+
+async function refuseInviteService(data: any) {
+
+    const id = parseInt(data.idListInvate);
+
+    const add_contact = await prisma.add_contact.delete({
+        where: {
+            id: id
+        },
+    })
+
+    return add_contact;
+}
+
+
+export { getUserService, createContactRequestService, aceptInviteService, refuseInviteService }
