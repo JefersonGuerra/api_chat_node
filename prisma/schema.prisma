@@ -8,17 +8,16 @@ datasource db {
 }
 
 model User {
-  id                    Int            @id @default(autoincrement())
-  public_id             String         @default(uuid())
+  id                    Int           @id @default(autoincrement())
+  public_id             String        @default(uuid())
   name                  String
-  email                 String         @unique
+  email                 String        @unique
   password              String
   image                 String
-  contact_list          Contact_list[]
-  add_contact_sender    Add_contact[]  @relation("user_sender")
-  add_contact_recipient Add_contact[]  @relation("user_recipient")
-  createdAt             DateTime       @default(now()) @db.Timestamptz(3)
-  updatedAt             DateTime       @updatedAt @db.Timestamptz(3)
+  add_contact_sender    Add_contact[] @relation("user_sender")
+  add_contact_recipient Add_contact[] @relation("user_recipient")
+  createdAt             DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt             DateTime      @updatedAt @db.Timestamptz(3)
 
   @@map("user")
 }
@@ -29,6 +28,7 @@ model Add_contact {
   user_sender       User     @relation("user_sender", fields: [id_user_sender], references: [id])
   id_user_recipient Int
   user_recipient    User     @relation("user_recipient", fields: [id_user_recipient], references: [id])
+  room              String   @unique @default(uuid())
   status            Boolean
   createdAt         DateTime @default(now()) @db.Timestamptz(3)
   updatedAt         DateTime @updatedAt @db.Timestamptz(3)
@@ -36,22 +36,11 @@ model Add_contact {
   @@map("add_contact")
 }
 
-model Contact_list {
-  id              Int      @id @default(autoincrement())
-  id_user         Int      @unique
-  id_user_contact Int      @unique
-  user            User     @relation(fields: [id_user_contact], references: [id])
-  createdAt       DateTime @default(now()) @db.Timestamptz(3)
-  updatedAt       DateTime @updatedAt @db.Timestamptz(3)
-
-  @@map("contact_list")
-}
-
 model Message {
   id                Int      @id @default(autoincrement())
   text              String
-  id_user_sender    Int      @unique
-  id_user_recipient Int      @unique
+  id_user_sender    Int
+  id_user_recipient Int
   createdAt         DateTime @default(now()) @db.Timestamptz(3)
   updatedAt         DateTime @updatedAt @db.Timestamptz(3)
 

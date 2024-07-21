@@ -57,20 +57,6 @@ async function aceptInviteService(data: any) {
         },
     })
 
-    await prisma.contact_list.create({
-        data: {
-            id_user: add_contact.id_user_sender,
-            id_user_contact: add_contact.id_user_recipient
-        }
-    })
-
-    await prisma.contact_list.create({
-        data: {
-            id_user: add_contact.id_user_recipient,
-            id_user_contact: add_contact.id_user_sender,
-        }
-    })
-
     return add_contact;
 }
 

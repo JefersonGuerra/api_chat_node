@@ -17,6 +17,7 @@ async function getUserService(params: any, fullUrl: string) {
             id: true,
             id_user_sender: true,
             id_user_recipient: true,
+            room: true,
             user_sender: {
                 select: {
                     id: true,
@@ -34,8 +35,9 @@ async function getUserService(params: any, fullUrl: string) {
         }
     });
 
-    const userSend = user.filter(item => item.user_sender.id !== id_user).map(item => item.user_sender);
-    const userRecipient = user.filter(item => item.user_recipient.id !== id_user).map(item => item.user_recipient);
+    const userSend: any = user.filter(item => item.user_sender.id !== id_user).map(item => item.user_sender);
+    const userRecipient: any = user.filter(item => item.user_recipient.id !== id_user).map(item => item.user_recipient);
+    const room = `${user.map(item => item.room)}`;
 
     const newObjSend = Object.assign([], { ...userSend });
     const newObjRecipient = Object.assign([], { ...userRecipient });
@@ -43,6 +45,13 @@ async function getUserService(params: any, fullUrl: string) {
     const userListResult: any = newObjSend.concat(newObjRecipient);
 
     userListResult.map((item: any) => item.image = `${fullUrl}/${item.image}`)
+    user.map(itemRoom =>
+        userListResult.map((itemUser: any) => {
+            if (itemUser.id === itemRoom.user_sender.id || itemRoom.user_recipient.id === itemUser.id) {
+                itemUser.room = itemRoom.room
+            }
+        })
+    )
 
     return userListResult;
 }

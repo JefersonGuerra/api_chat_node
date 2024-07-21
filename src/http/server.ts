@@ -3,7 +3,7 @@ import userRoutes from '../api/v1/routes/userRoutes'
 import loginRoutes from '../api/v1/routes/loginRoutes'
 import contactRequestRoute from '../api/v1/routes/contactRequestRoute'
 import listContactRoute from '../api/v1/routes/listContactRoute'
-import messageRoute from '../api/v1/routes/messageRoute'
+import listMessagesRoute from '../api/v1/routes/listMessagesRoute'
 import cors from '@fastify/cors'
 
 const fastifyApp = fastify()
@@ -36,9 +36,9 @@ fastifyApp.register(function (app, _, done) {
 }, { prefix: "/api/v1/listContact" });
 
 fastifyApp.register(function (app, _, done) {
-    messageRoute(app);
+    listMessagesRoute(app);
     done();
-}, { prefix: "/api/v1/message" });
+}, { prefix: "/api/v1/listMessages" });
 
 fastifyApp.listen({ port: port, host: hostname }).then(() => {
     console.log(`Api listening on port ${port}`);
